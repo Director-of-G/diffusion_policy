@@ -22,6 +22,7 @@ class PushTImageDataset(BaseImageDataset):
             ):
         
         super().__init__()
+        import pdb; pdb.set_trace()
         self.replay_buffer = ReplayBuffer.copy_from_path(
             zarr_path, keys=['img', 'state', 'action'])
         val_mask = get_val_mask(
@@ -92,7 +93,8 @@ class PushTImageDataset(BaseImageDataset):
 
 def test():
     import os
-    zarr_path = os.path.expanduser('~/dev/diffusion_policy/data/pusht/pusht_cchi_v7_replay.zarr')
+    # zarr_path = os.path.expanduser('~/dev/diffusion_policy/data/pusht/pusht_cchi_v7_replay.zarr')
+    zarr_path = os.path.expanduser('/home/yongpeng/homework/Robotics/project/diffusion_policy/data/pusht/pusht_cchi_v7_replay.zarr')
     dataset = PushTImageDataset(zarr_path, horizon=16)
 
     # from matplotlib import pyplot as plt
@@ -100,3 +102,6 @@ def test():
     # nactions = normalizer['action'].normalize(dataset.replay_buffer['action'])
     # diff = np.diff(nactions, axis=0)
     # dists = np.linalg.norm(np.diff(nactions, axis=0), axis=-1)
+
+if __name__ == "__main__":
+    test()

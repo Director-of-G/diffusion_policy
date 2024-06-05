@@ -1,6 +1,7 @@
 defaults:
   - _self_
-  - task: real_pusht_image
+  # - task: real_pusht_image
+  - task: real_leap_image
 
 name: train_diffusion_unet_image
 _target_: diffusion_policy.workspace.train_diffusion_unet_image_workspace.TrainDiffusionUnetImageWorkspace
@@ -22,7 +23,7 @@ policy:
   _target_: diffusion_policy.policy.diffusion_unet_image_policy.DiffusionUnetImagePolicy
 
   shape_meta: ${shape_meta}
-  
+
   noise_scheduler:
     _target_: diffusers.schedulers.scheduling_ddim.DDIMScheduler
     num_train_timesteps: 100
@@ -134,7 +135,7 @@ checkpoint:
     monitor_key: train_loss
     mode: min
     k: 5
-    format_str: 'epoch={epoch:04d}-train_loss={train_loss:.3f}.ckpt'
+    format_str: "epoch={epoch:04d}-train_loss={train_loss:.3f}.ckpt"
   save_last_ckpt: True
   save_last_snapshot: False
 

@@ -23,6 +23,7 @@ class PushTLowdimDataset(BaseLowdimDataset):
             max_train_episodes=None
             ):
         super().__init__()
+        import pdb; pdb.set_trace()
         self.replay_buffer = ReplayBuffer.copy_from_path(
             zarr_path, keys=[obs_key, state_key, action_key])
 

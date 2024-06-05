@@ -29,7 +29,7 @@ def real_data_to_replay_buffer(
         n_decoding_threads: int=multiprocessing.cpu_count(),
         n_encoding_threads: int=multiprocessing.cpu_count(),
         max_inflight_tasks: int=multiprocessing.cpu_count()*5,
-        verify_read: bool=True
+        verify_read: bool=True,
         ) -> ReplayBuffer:
     """
     It is recommended to use before calling this function
@@ -107,7 +107,9 @@ def real_data_to_replay_buffer(
     episode_starts = in_replay_buffer.episode_ends[:] - in_replay_buffer.episode_lengths[:]
     episode_lengths = in_replay_buffer.episode_lengths
     timestamps = in_replay_buffer['timestamp'][:]
-    dt = timestamps[1] - timestamps[0]
+    
+    dt = np.diff(timestamps[:in_replay_buffer.episode_ends[0]]).mean()
+    assert dt > 0.0
 
     with tqdm(total=n_steps*n_cameras, desc="Loading image data", mininterval=1.0) as pbar:
         # one chunk per thread, therefore no synchronization needed
