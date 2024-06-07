@@ -38,4 +38,5 @@ dataset:
   seed: 42
   val_ratio: 0.00
   max_train_episodes: null
-  delta_action: False
+  # delta_action: False
+  action_type: "delta" # delta, relative or absolute

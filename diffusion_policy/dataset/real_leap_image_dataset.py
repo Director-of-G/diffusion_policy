@@ -43,7 +43,8 @@ class RealLeapImageDataset(BaseImageDataset):
             seed=42,
             val_ratio=0.0,
             max_train_episodes=None,
-            delta_action=False,
+            # delta_action=False,
+            action_type="delta",
         ):
         assert os.path.isdir(dataset_path)
         
@@ -86,7 +87,8 @@ class RealLeapImageDataset(BaseImageDataset):
                 store=zarr.MemoryStore()
             )
         
-        if delta_action:
+        # if delta_action:
+        if action_type == "delta":
             # replace action as relative to previous frame
             actions = replay_buffer['action'][:]
             actions_diff = np.zeros_like(actions)
@@ -147,6 +149,7 @@ class RealLeapImageDataset(BaseImageDataset):
         self.n_latency_steps = n_latency_steps
         self.pad_before = pad_before
         self.pad_after = pad_after
+        self.action_type = action_type
 
     def get_validation_dataset(self):
         val_set = copy.copy(self)
@@ -213,6 +216,11 @@ class RealLeapImageDataset(BaseImageDataset):
         # observations are already taken care of by T_slice
         if self.n_latency_steps > 0:
             action = action[self.n_latency_steps:]
+
+        # if use relative action, substract the first observation
+        # as offset
+        if self.action_type == "relative":
+            action = action - data["robot_joint"][self.n_obs_steps-1]
 
         torch_data = {
             'obs': dict_apply(obs_dict, torch.from_numpy),
